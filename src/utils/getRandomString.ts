@@ -1,5 +1,5 @@
 // Función para generar un string aleatorio de longitud especificada sin utilizar crypto
-export async function getRandomString(longitud: number) :Promise<string> {
+export async function getRandomString(longitud : number = 6 ) :Promise<string> {
   const caracteresPermitidos = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let stringAleatorio = '';
 
