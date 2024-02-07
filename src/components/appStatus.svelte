@@ -3,6 +3,7 @@
   import type { LongURL, API_RESPONSE } from "../types";
   import { app_store } from "../stores/appStore.ts";
   import ShortUrlCard from "./shortUrlCard.svelte";
+  import Atom from "../components/icons/atom.svelte";
 
   export let data: LongURL;
 
@@ -31,7 +32,9 @@
 </script>
 
 {#if $app_store === APP_STATUS.idle}
-  <p class="text-white text-4xl">estamos en idle</p>
+  <div class="spinning text-slate-700">
+    <Atom classname="mx-auto size-96" />
+  </div>
 {/if}
 
 {#if $app_store === APP_STATUS.ready}
@@ -103,3 +106,18 @@
     </p>
   </div>
 {/if}
+
+<style>
+  @keyframes spinning {
+    from {
+      rotate: 0deg;
+    }
+    to {
+      rotate: 360deg;
+    }
+  }
+
+  .spinning {
+    animation: spinning 150s linear infinite;
+  }
+</style>
