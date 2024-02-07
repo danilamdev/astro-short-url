@@ -1,12 +1,11 @@
 <script lang="ts">
   import Button from "./button.svelte";
   import { getRandomString } from "../utils/getRandomString.ts";
+
+  import type { LongURL } from "../types.d.ts";
+  import { APP_STATUS, URLPattern } from "../const.ts";
+  import { app_store } from "../stores/appStore.ts";
   import AppStatus from "./appStatus.svelte";
-
-  import type { App_Status, LongURL } from "../types.d.ts";
-  import { APP_STATUS } from "../const.ts";
-
-  let app_status: App_Status = APP_STATUS.idle;
 
   let data: LongURL = {
     longUrl: "",
@@ -14,22 +13,27 @@
     title: "",
   };
 
-  let error: boolean;
+  let errorValidUrl: boolean;
 
   async function HandlePaste() {
+    data.longUrl = "";
     const text = await navigator.clipboard.readText();
     data.longUrl = text;
   }
 
   async function handleClick() {
-    if (data.longUrl == undefined || data.longUrl == "") {
-      error = true;
+    const isValidUrl = URLPattern.test(data.longUrl);
+
+    if (data.longUrl == undefined || data.longUrl == "" || !isValidUrl) {
+      errorValidUrl = true;
       return;
     }
 
-    error = false;
+    errorValidUrl = false;
     data.hash = await getRandomString();
-    app_status = APP_STATUS.ready;
+    $app_store = APP_STATUS.ready;
+
+    console.log("store", $app_store);
   }
 </script>
 
@@ -51,7 +55,7 @@
   <Button {handleClick}>Acortar!</Button>
 </div>
 <div class="h-20 border border-transparent">
-  {#if error}
+  {#if errorValidUrl}
     <p
       class="text-red-300 border-red-300 w-fit px-1 rounded mt-2 py-1 text-xs font-light"
     >
@@ -60,7 +64,9 @@
   {/if}
 </div>
 
-<AppStatus {data} {app_status} />
+<AppStatus {data}>
+  <slot name="stop" />
+</AppStatus>
 
 <style>
   .btn-paste::after {

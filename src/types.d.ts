@@ -9,3 +9,7 @@ export interface LongURL {
 type Keys = keyof typeof APP_STATUS
 
 export type App_Status = typeof APP_STATUS[Keys]
+
+export type API_RESPONSE =
+  | { status: 'ok'}
+  | { status: 'error', message: string}

@@ -2,11 +2,12 @@
 import Layout from "../layouts/Layout.astro";
 import Form from "../components/form.svelte";
 import Paste from "../components/icons/paste-icon.astro";
+import StopMan from "../components/icons/stop-man.astro";
 ---
 
 <Layout title="Short URIs App">
   <main class="max-w-screen-md mx-auto">
-    <header class="py-48">
+    <header class="pt-48 mb-20">
       <h1 class="text-white text-6xl mx-auto text-balance text-left">
         Cambia tu URL laaaaarga por una<span
           class="font-semibold text-orange-400 underline underline-offset-8 text-6xl"
@@ -24,6 +25,7 @@ import Paste from "../components/icons/paste-icon.astro";
       <div>
         <Form client:load>
           <Paste slot="icon" class="size-5" />
+          <StopMan slot="stop" class="size-36 fill-transparent" />
         </Form>
       </div>
     </section>
