@@ -1,0 +1,9 @@
+POST http://localhost:4321/api/create HTTP/1.1
+content-type: application/json
+
+{
+    "longUrl": "sample",
+    "hash": "Wed, 21 Oct 2015 18:27:50 GMT"
+}
+
+###

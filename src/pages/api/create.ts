@@ -1,51 +1,16 @@
 import type { APIRoute } from "astro";
 import { client as redis} from '../../lib/redis'
-
-import type { Data, LongUrl } from "../../types";
-
-
-/*
-data = [
-  { key1: {url: string, created_at: Date} },
-  { key1: {url: string, created_at: Date} },
-]
-
-data = [
-  {
-    key: 2rhire,
-    longurl: string,
-    created_at: Date
-  }
-]
-*/
-
-const KEY_LENGTH = 6
-
-let data: Data = []
+import type { LongURL } from "../../types";
 
 export const POST: APIRoute = async ({ request }) => {
+  const { longUrl, hash, title } = <LongURL>(await request.json());
 
-  const { longUrl, hash } = await request.json();
-
-  console.log(longUrl, hash)
-  // const key = await getRandomString(KEY_LENGTH);
-
-  // const newKey = { 
-  //   [key]: {
-  //     longUrl,
-  //     created_at: new Date(Date.now())
-  //   }
-  // }
-
-  // data.push(newKey)
-  // GUARDAR LA VIEJA URL
-
-  // const result = await redis.hset('dani:2', {nombre:'loro'})
-
-  // const result = await redis.sadd('dani:15',['hola',9, {nombre:'hola', edad:2}])
-  // await redis.lpush('pepe', ['hola','nene',45])
-  // console.log('redis: ', result)
-  // console.log('values-redis: ', values)
+  if(!longUrl || !hash){
+    return new Response(JSON.stringify({status: 'error', message: 'ha habido un error con la petición'}), 
+    {status: 400})
+  }
   
-  return new Response(JSON.stringify(data))
+  console.log(longUrl, hash, title)
+ 
+  return new Response(JSON.stringify({status: "ok"}))
 }
