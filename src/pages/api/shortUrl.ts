@@ -29,5 +29,16 @@ export const POST: APIRoute = async ({ request }) => {
 
   await redis.set(`dani:${hash}`, JSON.stringify(data))
 
-  return new Response(JSON.stringify({status: "ok"}))
+  return new Response(JSON.stringify({status: "ok",longUrl, title, hash}))
+}
+
+
+export const GET: APIRoute = async ({ url}) => {
+
+  const link = new URL(url).searchParams
+  const hash = link.get('hash')
+
+  const [key] = await redis.keys(`*:${hash}`)
+  await redis.del(key)
+  return new Response('ok')
 }

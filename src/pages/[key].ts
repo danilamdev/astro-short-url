@@ -1,8 +1,16 @@
 import type {APIRoute} from 'astro'
-const data = {yyy: 'http://www.google.com'}
+import { client as redis } from '../lib/redis'
 
-export const GET: APIRoute = ({ request, params, redirect }) => {
-  console.log('params', params)
-  
-  return redirect(data[params.key], 302)
+export const GET: APIRoute = async ({ params, redirect }) => {
+
+  const urlKey = params.key
+
+  const [key] = await redis.keys(`*:${urlKey}`)
+  const data = await redis.get(key)
+  if(data){
+   const urlToRedirect = JSON.parse(data).longUrl
+    return redirect(urlToRedirect, 302)
+  }
+
+  return redirect('/', 302)
 }

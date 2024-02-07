@@ -2,13 +2,15 @@
   import { APP_STATUS } from "../const";
   import type { LongURL, API_RESPONSE } from "../types";
   import { app_store } from "../stores/appStore.ts";
+  import ShortUrlCard from "./shortUrlCard.svelte";
 
   export let data: LongURL;
 
   let appError: string;
+  let shortUrl: Omit<LongURL, "longUrl">;
 
   async function handleSubmit() {
-    const res = await fetch("/api/create", {
+    const res = await fetch("/api/shortUrl", {
       method: "POST",
       body: JSON.stringify(data),
     });
@@ -21,7 +23,10 @@
       return;
     }
 
+    const { status, ...apiResponse } = response;
+
     $app_store = APP_STATUS.submitted;
+    shortUrl = { ...apiResponse };
   }
 </script>
 
@@ -87,7 +92,7 @@
 {/if}
 
 {#if $app_store === APP_STATUS.submitted}
-  <p>exitos!!!!</p>
+  <ShortUrlCard {shortUrl} />
 {/if}
 
 {#if $app_store === APP_STATUS.error}
