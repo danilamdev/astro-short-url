@@ -7,6 +7,8 @@
   import { app_store } from "../stores/appStore.ts";
   import AppStatus from "./appStatus.svelte";
 
+  export let session: unknown;
+
   let data: LongURL = {
     longUrl: "",
     hash: "",
@@ -64,7 +66,7 @@
   {/if}
 </div>
 
-<AppStatus {data}>
+<AppStatus {data} {session}>
   <slot name="stop" />
 </AppStatus>
 
