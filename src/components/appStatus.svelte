@@ -6,7 +6,6 @@
   import Atom from "../components/icons/atom.svelte";
 
   export let data: LongURL;
-  export let session: unknown;
 
   let appError: string;
   let shortUrl: Omit<LongURL, "longUrl">;
@@ -33,7 +32,6 @@
 </script>
 
 {#if $app_store === APP_STATUS.idle}
-  <pre>{JSON.stringify(session, null, 2)}</pre>
   <div class="spinning text-slate-700">
     <Atom classname="mx-auto size-96" />
   </div>

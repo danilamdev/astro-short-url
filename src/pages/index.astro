@@ -3,9 +3,10 @@ import Layout from "../layouts/Layout.astro";
 import Form from "../components/form.svelte";
 import Paste from "../components/icons/paste-icon.astro";
 import StopMan from "../components/icons/stop-man.astro";
+import GoogleIcon from "../components/icons/googleIcon.astro";
 
 import { getSession } from "auth-astro/server";
-import { SignIn, SignOut } from "auth-astro/components";
+import BtnGoogle from "../components/btnGoogle.astro";
 
 const session = await getSession(Astro.request);
 
@@ -30,14 +31,8 @@ console.log("session>", session);
 
     <section>
       <div>
-        <div class="py-10 text-center">
-          {
-            session ? (
-              <SignOut>cerrar sesion</SignOut>
-            ) : (
-              <SignIn provider="google">iniciar sesion...</SignIn>
-            )
-          }
+        <div class="py-10 flex justify-center">
+          {!session && <BtnGoogle />}
         </div>
         <Form client:load {session}>
           <Paste slot="icon" class="size-5" />

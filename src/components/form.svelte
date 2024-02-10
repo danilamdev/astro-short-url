@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+  import { signOut } from "auth-astro/client.ts";
+
   import Button from "./button.svelte";
   import { getRandomString } from "../utils/getRandomString.ts";
 
@@ -37,6 +40,12 @@
 
     console.log("store", $app_store);
   }
+
+  onMount(() => {
+    document
+      .getElementById("sign-out")
+      ?.addEventListener("click", () => signOut());
+  });
 </script>
 
 <button
@@ -56,7 +65,7 @@
   />
   <Button {handleClick}>Acortar!</Button>
 </div>
-<div class="h-20 border border-transparent">
+<div class="h-12 border border-transparent">
   {#if errorValidUrl}
     <p
       class="text-red-300 border-red-300 w-fit px-1 rounded mt-2 py-1 text-xs font-light"
@@ -66,7 +75,30 @@
   {/if}
 </div>
 
-<AppStatus {data} {session}>
+{#if session}
+  <div class="flex justify-between items-center">
+    <div>
+      <p>Bienvenido {session?.user?.name}</p>
+      <small class="text-gray-500">{session?.user?.email}</small>
+    </div>
+    <div class="flex flex-col items-end gap-y-2">
+      <img
+        src={session?.user?.image}
+        alt="imagen del usuario"
+        class="max-w-full object-cover size-9 rounded-full mr-2"
+      />
+      <div
+        class="text-sm text-slate-500 bg-transparent hover:bg-slate-900 px-2 py-1 rounded transition-colors"
+      >
+        <button id="sign-out" class="text-gray-500 hover:text-red-300/70"
+          >cerrar sesión</button
+        >
+      </div>
+    </div>
+  </div>
+{/if}
+
+<AppStatus {data}>
   <slot name="stop" />
 </AppStatus>
 
