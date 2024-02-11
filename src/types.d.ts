@@ -1,4 +1,5 @@
 import { APP_STATUS } from './const.ts'
+import type { Session } from '@auth/core/types'
 
 export interface LongURL {
   longUrl: string

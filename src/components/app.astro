@@ -7,9 +7,9 @@ import BtnGoogle from "./btnGoogle.astro";
 
 import { getSession } from "auth-astro/server";
 
-import type { LongURL } from "../types";
+import type { LongURL, Session } from "../types";
 
-const session = await getSession(Astro.request);
+const session = (await getSession(Astro.request)) as unknown as Session;
 
 let links: LongURL[] = [];
 
