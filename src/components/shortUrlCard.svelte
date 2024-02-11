@@ -32,7 +32,9 @@
   }
 </script>
 
-<div class="bg-slate-800 py-5 rounded-lg max-w-xl mx-auto px-5 relative">
+<div
+  class="bg-slate-900 border border-gray-800 py-5 rounded-lg max-w-xl mx-auto px-5 relative"
+>
   <button
     on:click={() => handleRemove(shortUrl.hash)}
     class="text-red-300 bg-transparent transition-colors hover:bg-red-300/20 rounded-full p-1 absolute top-2 right-2"
@@ -70,7 +72,7 @@
       href={shortUrl?.longUrl}
       target="_blank"
       rel="noopener noreferrer"
-      class="bg-slate-900 text-gray-400 px-2 rounded text-sm py-1 inline-flex items-center gap-1 hover:bg-blue-500 hover:text-white transition-colors"
+      class="bg-slate-950/50 text-gray-400 px-2 rounded text-sm py-1 inline-flex items-center gap-1 hover:bg-blue-500 hover:text-white transition-colors"
       >ir al sitio <span class="size-4"><ArrowLink /></span></a
     >
   </div>

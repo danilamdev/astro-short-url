@@ -46,15 +46,21 @@
 </script>
 
 {#if $app_store === APP_STATUS.idle}
-  <!-- <div class="spinning text-slate-700">
-    <Atom classname="mx-auto size-96" />
-  </div> -->
-
-  {#each $linkStore as link}
-    <div class="mb-7">
-      <ShortUrlCard shortUrl={link} />
+  {#if $linkStore.length === 0}
+    <div class="grid place-content-center h-80">
+      <p
+        class="text-5xl text-center text-balance max-w-lg text-slate-800 font-bold"
+      >
+        todavia no tienes short links. Comienza a crearlos
+      </p>
     </div>
-  {/each}
+  {:else}
+    {#each $linkStore as link, i}
+      <div class="mb-7 card" style={`animation-delay: ${i * 0.1}s`}>
+        <ShortUrlCard shortUrl={link} />
+      </div>
+    {/each}
+  {/if}
 {/if}
 
 {#if $app_store === APP_STATUS.ready}
@@ -123,3 +129,23 @@
     </p>
   </div>
 {/if}
+
+<style>
+  @keyframes FadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .card {
+    animation-name: FadeIn;
+    animation-duration: 1s;
+    animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation-fill-mode: both;
+  }
+</style>

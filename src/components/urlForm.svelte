@@ -100,7 +100,8 @@
       <VerLinksBtn onClick={() => verLinks()}>Ver tus links</VerLinksBtn>
     {/if}
     <small class="text-zinc-600 block"
-      >tienes <span class="text-orange-300">{$linkStore.length}</span> short links</small
+      >tienes <span class="text-orange-300 text-lg">{$linkStore.length}</span> short
+      links</small
     >
   </div>
 
