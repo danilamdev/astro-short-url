@@ -15,9 +15,9 @@ let links: LongURL[] = [];
 
 if (session) {
   const keys = await redis.keys(`${session.user?.email}:*`);
-  const datos = await Promise.all(keys.map((key) => redis.get(key)));
+  const datos = await Promise.all(keys.map((key: string) => redis.get(key)));
 
-  if (datos) links = datos.map((data) => JSON.parse(data!));
+  if (datos) links = datos.map((data: unknown) => JSON.parse(data as string));
 }
 ---
 
