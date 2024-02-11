@@ -1,5 +1,7 @@
 <script lang="ts">
   import CopyIcon from "../components/icons/copy.svelte";
+  import Modal from "../components/modal.svelte";
+  import ModalContent from "../components/modalContent.svelte";
   import TrashIcon from "./icons/trash.svelte";
   import GoodIcon from "./icons/good.svelte";
   import ArrowLink from "./icons/arrowLink.svelte";
@@ -11,6 +13,7 @@
   export let shortUrl: LongURL;
 
   let isCopied = false;
+  let showModal = false;
 
   function CopyUrl() {
     return () => {
@@ -36,11 +39,15 @@
   class="bg-slate-900 border border-gray-800 py-5 rounded-lg max-w-xl mx-auto px-5 relative"
 >
   <button
-    on:click={() => handleRemove(shortUrl.hash)}
+    on:click={() => (showModal = true)}
     class="text-red-300 bg-transparent transition-colors hover:bg-red-300/20 rounded-full p-1 absolute top-2 right-2"
   >
     <TrashIcon classname="size-5" />
   </button>
+
+  <Modal bind:showModal removeLink={() => handleRemove(shortUrl?.hash)}>
+    <ModalContent title="¿Estás seguro que quieres eliminar el link?" />
+  </Modal>
 
   <button
     on:click={CopyUrl()}
@@ -64,7 +71,7 @@
     >
   </div>
   <div class="flex justify-between pl-2 mt-6 items-center">
-    <div class="flex items-center">
+    <div class="flex items-center text-lg">
       <p>shorly.io/</p>
       <span class="text-emerald-400">{shortUrl?.hash ?? "sin_hash"}</span>
     </div>
@@ -72,7 +79,7 @@
       href={shortUrl?.longUrl}
       target="_blank"
       rel="noopener noreferrer"
-      class="bg-slate-950/50 text-gray-400 px-2 rounded text-sm py-1 inline-flex items-center gap-1 hover:bg-blue-500 hover:text-white transition-colors"
+      class="bg-slate-950/50 text-gray-400 px-3 rounded text-sm py-2 inline-flex items-center gap-1 hover:bg-blue-500 hover:text-white transition-colors"
       >ir al sitio <span class="size-4"><ArrowLink /></span></a
     >
   </div>

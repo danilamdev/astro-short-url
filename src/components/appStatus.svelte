@@ -51,12 +51,12 @@
       <p
         class="text-5xl text-center text-balance max-w-lg text-slate-800 font-bold"
       >
-        todavia no tienes short links. Comienza a crearlos
+        todavía no tienes short links. Comienza a crearlos
       </p>
     </div>
   {:else}
     {#each $linkStore as link, i}
-      <div class="mb-7 card" style={`animation-delay: ${i * 0.1}s`}>
+      <div class="mb-7 card" style={`animation-delay: ${i * 0.2}s`}>
         <ShortUrlCard shortUrl={link} />
       </div>
     {/each}
@@ -81,7 +81,7 @@
           <span>Título</span>
           <input
             type="text"
-            class="w-full text-gray-100 bg-transparent border border-slate-900 rounded py-2 px-2 placeholder:text-slate-600"
+            class="w-full text-gray-100 bg-transparent border border-slate-900 rounded py-2 px-2 placeholder:text-slate-600 focus:outline focus:outline-emerald-400 focus:outline-1"
             placeholder="Mi url corta..."
             bind:value={data.title}
           />
@@ -92,7 +92,7 @@
           <input
             type="text"
             bind:value={data.hash}
-            class="bg-slate-900 text-blue-400 px-4 rounded w-48 text-center py-4 text-3xl"
+            class="bg-slate-900 text-blue-400 px-4 rounded w-48 text-center py-4 text-3xl focus:outline focus:outline-sky-400 focus:outline-1"
           />
         </div>
         <span class="text-slate-500 text-sm mt-2"
@@ -134,18 +134,18 @@
   @keyframes FadeIn {
     from {
       opacity: 0;
-      transform: scale(0.8);
+      transform: translateY(75px) scale(0.9);
     }
     to {
       opacity: 1;
-      transform: scale(1);
+      transform: translateY(0px) scale(1);
     }
   }
 
   .card {
     animation-name: FadeIn;
     animation-duration: 1s;
-    animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation-timing-function: cubic-bezier(0.27, 0.59, 0.09, 1.17);
     animation-fill-mode: both;
   }
 </style>
