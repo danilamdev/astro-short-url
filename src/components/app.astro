@@ -1,0 +1,20 @@
+---
+import Form from "./urlForm.svelte";
+import Paste from "./icons/paste-icon.astro";
+import StopMan from "./icons/stop-man.astro";
+import BtnGoogle from "./btnGoogle.astro";
+
+import { getSession } from "auth-astro/server";
+
+const session = await getSession(Astro.request);
+
+console.log("session>", session);
+---
+
+<div class="py-10 flex justify-center">
+  {!session && <BtnGoogle />}
+</div>
+<Form client:load {session}>
+  <Paste slot="icon" class="size-5" />
+  <StopMan slot="stop" class="size-36 fill-transparent" />
+</Form>

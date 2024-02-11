@@ -2,15 +2,17 @@
   import { onMount } from "svelte";
   import { signOut } from "auth-astro/client.ts";
 
-  import Button from "./button.svelte";
+  import Button from "./button.svelte.ts";
   import { getRandomString } from "../utils/getRandomString.ts";
 
-  import type { LongURL } from "../types.d.ts";
+  import type { LongURL } from "../types";
   import { APP_STATUS, URLPattern } from "../const.ts";
   import { app_store } from "../stores/appStore.ts";
-  import AppStatus from "./appStatus.svelte";
+  import AppStatus from "./appStatus.svelte.ts";
 
-  export let session: unknown;
+  export let session: {
+    user: { image: string; name: string; email: string };
+  } | null;
 
   let data: LongURL = {
     longUrl: "",
