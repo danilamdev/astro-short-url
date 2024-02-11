@@ -1,14 +1,14 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { signOut } from "auth-astro/client.ts";
-
-  import Button from "./button.svelte.ts";
-  import { getRandomString } from "../utils/getRandomString.ts";
-
   import type { LongURL } from "../types";
   import { APP_STATUS, URLPattern } from "../const.ts";
   import { app_store } from "../stores/appStore.ts";
-  import AppStatus from "./appStatus.svelte.ts";
+
+  import Button from "./button.svelte";
+  import AppStatus from "./appStatus.svelte";
+  import ErrorUrl from "./errorUrl.svelte";
+  import { getRandomString } from "../utils/getRandomString.ts";
 
   export let session: {
     user: { image: string; name: string; email: string };
@@ -67,15 +67,7 @@
   />
   <Button {handleClick}>Acortar!</Button>
 </div>
-<div class="h-12 border border-transparent">
-  {#if errorValidUrl}
-    <p
-      class="text-red-300 border-red-300 w-fit px-1 rounded mt-2 py-1 text-xs font-light"
-    >
-      Error. No es una url válida. Intenta nuevamente
-    </p>
-  {/if}
-</div>
+<ErrorUrl {errorValidUrl} />
 
 {#if session}
   <div class="flex justify-between items-center">
