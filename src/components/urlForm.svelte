@@ -1,23 +1,28 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { signOut } from "auth-astro/client.ts";
-  import type { LongURL } from "../types";
+  import type { DataToDb, LongURL, Session } from "../types";
   import { APP_STATUS, URLPattern } from "../const.ts";
   import { app_store } from "../stores/appStore.ts";
+  import { linkStore } from "../stores/linksStore.ts";
 
   import Button from "./button.svelte";
+  import VerLinksBtn from "./verLinksBtn.svelte";
   import AppStatus from "./appStatus.svelte";
   import ErrorUrl from "./errorUrl.svelte";
   import { getRandomString } from "../utils/getRandomString.ts";
+  import PasteBtn from "./pasteBtn.svelte";
 
-  export let session: {
-    user: { image: string; name: string; email: string };
-  } | null;
+  export let session: Session;
+  export let links: LongURL[];
 
-  let data: LongURL = {
+  linkStore.set(links);
+
+  let data: DataToDb = {
     longUrl: "",
     hash: "",
     title: "",
+    email: "",
   };
 
   let errorValidUrl: boolean;
@@ -38,9 +43,13 @@
 
     errorValidUrl = false;
     data.hash = await getRandomString();
-    $app_store = APP_STATUS.ready;
+    // $app_store = APP_STATUS.ready;
+    app_store.set(APP_STATUS.ready);
+  }
 
-    console.log("store", $app_store);
+  function verLinks() {
+    app_store.set(APP_STATUS.idle);
+    data.longUrl = "";
   }
 
   onMount(() => {
@@ -50,13 +59,7 @@
   });
 </script>
 
-<button
-  on:click={HandlePaste}
-  class="btn-paste relative flex gap-1 text-slate-400 text-sm bg-slate-950 hover:text-white hover:font-bold rounded-full items-end justify-center mb-5 px-3 py-1"
->
-  <slot name="icon" />
-  <span class="font-light"> pegar url </span>
-</button>
+<PasteBtn {HandlePaste} />
 
 <div class="flex gap-2">
   <input
@@ -67,19 +70,21 @@
   />
   <Button {handleClick}>Acortar!</Button>
 </div>
+
 <ErrorUrl {errorValidUrl} />
 
 {#if session}
-  <div class="flex justify-between items-center">
+  <div class="flex justify-between items-center border-b border-gray-900 pb-5">
     <div>
-      <p>Bienvenido {session?.user?.name}</p>
-      <small class="text-gray-500">{session?.user?.email}</small>
+      <p><span class="text-gray-400">Bienvenido</span> {session?.user?.name}</p>
+
+      <small class="text-zinc-600">{session?.user?.email}</small>
     </div>
     <div class="flex flex-col items-end gap-y-2">
       <img
         src={session?.user?.image}
         alt="imagen del usuario"
-        class="max-w-full object-cover size-9 rounded-full mr-2"
+        class="max-w-full object-cover size-7 rounded-full mr-2"
       />
       <div
         class="text-sm text-slate-500 bg-transparent hover:bg-slate-900 px-2 py-1 rounded transition-colors"
@@ -90,30 +95,16 @@
       </div>
     </div>
   </div>
+  <div class="my-6">
+    {#if $app_store === APP_STATUS.submitted}
+      <VerLinksBtn onClick={() => verLinks()}>Ver tus links</VerLinksBtn>
+    {/if}
+    <small class="text-zinc-600 block"
+      >tienes <span class="text-orange-300">{$linkStore.length}</span> short links</small
+    >
+  </div>
+
+  <AppStatus {data} {session}>
+    <slot name="stop" />
+  </AppStatus>
 {/if}
-
-<AppStatus {data}>
-  <slot name="stop" />
-</AppStatus>
-
-<style>
-  .btn-paste::after {
-    content: "";
-    position: absolute;
-    inset: 0px;
-    scale: 0.9;
-    background-image: linear-gradient(
-      45deg,
-      rgb(155, 74, 36) 30%,
-      rgb(199, 148, 82) 60%,
-      rgb(255, 160, 83)
-    );
-    border-radius: 9999px;
-    z-index: -10;
-    transition: scale 200ms ease;
-  }
-
-  .btn-paste:hover::after {
-    scale: 1.05 1.2;
-  }
-</style>

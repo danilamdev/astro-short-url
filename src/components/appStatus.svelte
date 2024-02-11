@@ -1,16 +1,20 @@
 <script lang="ts">
   import { APP_STATUS } from "../const";
-  import type { LongURL, API_RESPONSE } from "../types";
+  import type { LongURL, API_RESPONSE, Session, DataToDb } from "../types";
   import { app_store } from "../stores/appStore.ts";
   import ShortUrlCard from "./shortUrlCard.svelte";
-  import Atom from "../components/icons/atom.svelte";
+  import { linkStore } from "../stores/linksStore.ts";
 
-  export let data: LongURL;
+  export let data: DataToDb;
+  export let session: Session;
 
-  let appError: string;
-  let shortUrl: Omit<LongURL, "longUrl">;
+  let error_msg: string;
+  let shortUrl: LongURL;
 
   async function handleSubmit() {
+    const { email } = session?.user!;
+    data.email = email;
+
     const res = await fetch("/api/shortUrl", {
       method: "POST",
       body: JSON.stringify(data),
@@ -19,22 +23,38 @@
     const response: API_RESPONSE = await res.json();
 
     if (response.status === "error") {
-      $app_store = APP_STATUS.error;
-      appError = response.message;
+      app_store.set(APP_STATUS.error);
+      // $app_store = APP_STATUS.error;
+      error_msg = response.message;
       return;
     }
 
     const { status, ...apiResponse } = response;
 
-    $app_store = APP_STATUS.submitted;
+    // $app_store = APP_STATUS.submitted;
+    app_store.set(APP_STATUS.submitted);
+    linkStore.update((links) => [
+      {
+        title: data.title,
+        hash: data.hash,
+        longUrl: data.longUrl,
+      },
+      ...links,
+    ]);
     shortUrl = { ...apiResponse };
   }
 </script>
 
 {#if $app_store === APP_STATUS.idle}
-  <div class="spinning text-slate-700">
+  <!-- <div class="spinning text-slate-700">
     <Atom classname="mx-auto size-96" />
-  </div>
+  </div> -->
+
+  {#each $linkStore as link}
+    <div class="mb-7">
+      <ShortUrlCard shortUrl={link} />
+    </div>
+  {/each}
 {/if}
 
 {#if $app_store === APP_STATUS.ready}
@@ -48,9 +68,6 @@
             {data.longUrl}
           </p>
         {/if}
-        <p class="text-gray-200 w-fit ml-auto px-5 font-light">
-          copy short url
-        </p>
       </header>
 
       <section class=" flex-1 py-6 flex flex-col items-center gap-2">
@@ -73,14 +90,14 @@
           />
         </div>
         <span class="text-slate-500 text-sm mt-2"
-          >Puedes cambiar el <span class="font-semibold underline text-blue-400"
+          >Puedes cambiar el <span class="font-semibold text-blue-400"
             >hash</span
           > por el que tu quieras</span
         >
       </section>
       <div class="py-10 flex gap-6 justify-center items-center">
         <button
-          on:click={() => ($app_store = APP_STATUS.idle)}
+          on:click={() => app_store.set(APP_STATUS.idle)}
           class="bg-slate-900 text-slate-300 px-5 py-3 rounded hover:bg-red-400/30 transition-colors"
           >cancelar</button
         >
@@ -102,22 +119,7 @@
   <div class="w-ful h-56 flex flex-col items-center gap-y-5">
     <slot />
     <p class="text-red-300 text-xl">
-      Error: {appError}
+      Error: {error_msg}
     </p>
   </div>
 {/if}
-
-<style>
-  @keyframes spinning {
-    from {
-      rotate: 0deg;
-    }
-    to {
-      rotate: 360deg;
-    }
-  }
-
-  .spinning {
-    animation: spinning 150s linear infinite;
-  }
-</style>

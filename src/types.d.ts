@@ -13,3 +13,17 @@ export type App_Status = typeof APP_STATUS[Keys]
 export type API_RESPONSE =
   | { status: 'ok'} & LongURL
   | { status: 'error', message: string}
+
+export type Session = {
+  user: {name: string, email: string, image: string}
+} | null
+
+// descartamos el null del tipo Session
+type SessionNotNull = NonNullable<Session>
+
+type UserProp<k extends keyof SessionNotNull['user'] > = Pick<NonNullable<Session>['user'], k>
+
+type UserEmail = UserProp<'email'>
+
+export type DataToDb = LongURL & UserEmail
+
